@@ -1,107 +1,55 @@
+var displayBuffer = "";
+var numero = "";
+var termos = [undefined,  undefined, undefined];
+var resultado = undefined;
 
-const screen = document.querySelector(".screen");
-
-let docBody = document.getElementsByTagName("body")[0];
-	docBody.onkeydown = (e)=>{
-	
-const pegarValor = function(valor){
- 	apresentar(valor);
-} 
-
-
-const apresentar = function(valor){
-
-	if(valor == "." && screen.innerText.indexOf(valor) != -1 ){
-		return;
-	}
-
-	if(operando){
-		operando = false;
-		
-		if(valor == "."){
-			screen.innerText = "0";
-			screen.innerText += valor;
-		}else{
-			screen.innerText = "";
-			screen.innerText += valor;
-		}
-	}else{
-		if(valor == "." && screen.innerText == "0"){
-				screen.innerText = "0";
-				screen.innerText += valor;
-		}else if(screen.innerText == "0"){
-			screen.innerText = "";
-			screen.innerText += valor;
-		}else{
-			screen.innerText += valor;
-		}
-	}
-	
+function pressNumero(numbers){
+    numero = numero.concat(numbers.innerHTML);
+    showDisplay(numbers.innerHTML);
 }
 
-const calcular = function(valorAntigo, operador, valorAtual){
-	if(operador == soma){
-		operadorAntigo = "";
-		return antigo+atual;
-	}else if(operador == subtracao){
-		operadorAntigo = "";
-		return antigo-atual;
-	}else if(operador == divisao){
-		operadorAntigo = "";
-		return antigo/atual;
-	}else if(operador == multiplicacao){
-		operadorAntigo = "";
-		return antigo*atual;
-	}
+function pressOperator(operators){
+    termos[0] = numero;
+    termos[1] = operators.innerHTML;
+    showDisplay(operators.innerHTML);
+    numero = "";
 }
 
-
-const igual = function(){
-
-	
-	operando = true;
-	atual = Number(screen.innerText);
-
-	if(operadorAtual == ""){
-		//atual = atual + atual;
-		apresentar(atual);
-	}else{
-		if(operadorAntigo == ""){
-			resultado = calcular(antigo, operadorAtual, atual);
-			antigo = resultado;
-			apresentar(resultado);
-			operadorAtual = "";
-		}else{
-			resultado = calcular(antigo, operadorAntigo, atual);
-			antigo = resultado;
-			apresentar(resultado);
-			operadorAtual = "";
-		}
-	}
-	var r = {antigo, atual, operadorAntigo, operadorAtual, resultado};
-	console.table(r);
+function pressEqual() {
+    termos[2] = numero;
+    switch(termos[1])  {
+        case '+':
+            resultado = Number(termos[0])+Number(termos[2]);
+            break;
+        case '-':
+            resultado = Number(termos[0])-Number(termos[2]);
+            break;
+        case '*':
+            resultado = Number(termos[0])*Number(termos[2]);
+            break;
+        case '/':
+            resultado = Number(termos[0])/Number(termos[2]);
+            break;
+    }
+    clearDisplay();
+    showDisplay(resultado);
+}
+function clearMemory() {
+    numero = "";
 }
 
-const operador = function(operador){
+function clearDisplay()  {
+    displayBuffer = "";
+    var tela = document.getElementById("screen");
+    tela.value = displayBuffer;
+}
 
-	atual = Number(screen.innerText);
-	operadorAntigo = operadorAtual;
-	if(operadorAntigo == ""){
-		antigo = atual;
-	}
-	operadorAtual = operador;
-	operando = true;
-
-	if(operadorAntigo != ""){
-			resultado = calcular(antigo, operadorAntigo, atual);
-			antigo = resultado;
-			apresentar(resultado);
-			operando = true;
-	}
-
-	var t = {antigo, atual, operadorAntigo, operadorAtual, resultado};
-	console.table(t);
-
-	return;
-
+function clearAll()  {
+    clearDisplay()
+    clearMemory()
+}
+function showDisplay(conteudo){
+    displayBuffer = displayBuffer.concat(conteudo);
+    var tela = document.getElementById("sreen");
+    tela.value = displayBuffer;
 }
